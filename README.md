@@ -1,4 +1,4 @@
-"# Project_Rostelecom" 
+
 Финальный тестовый проект SkillFactory курса INTQAP-1052
 
 Автоматизированное тестирование UI сайта: https://b2c.passport.rt.ru/ с использованием PyTest и Selenium.
@@ -9,7 +9,7 @@
 
 В папке Project_Rostelecom в файлах authorization_login_pages.py, authorization_mail_pages.py, authorization_personal_account_pages.py, authorization_phone_pages.py, 
 
-    authorization_temporary_code_pages.py, recovery_password_pages.py, registration_pages.py, находятся все локаторы и методы для соответствующих тестируемых страниц.
+authorization_temporary_code_pages.py, recovery_password_pages.py, registration_pages.py, находятся все локаторы и методы для соответствующих тестируемых страниц.
 
 В корне проекта в файле conftest.py находится фикстура с функцией открытия и закрытия браузера. Для запуска тестов необходимо поменять путь до webdriver на свой.
 
