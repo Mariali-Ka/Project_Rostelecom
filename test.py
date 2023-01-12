@@ -1,0 +1,1056 @@
+import time
+from authorization_login_pages import LoginPageHelper
+from authorization_mail_pages import MailPageHelper
+from authorization_personal_account_pages import PersonalAccountPageHelper
+from authorization_phone_pages import SearchPageHelper
+from authorization_temporary_code_pages import TemporaryCodePageHelper
+from recovery_password_pages import RecoveryPageHelper
+from registration_pages import SearchHelper
+
+
+# 1 тест # проверка корректности введенного номера
+def test_value_number_phone(browser):
+    value_number_phone = SearchPageHelper(browser)
+    value_number_phone.go_to_site()
+    time.sleep(20)
+    value_number_phone.click_word_phono()
+    time.sleep(10)
+    value_number_phone.entry_phone_number("89135397056")
+    time.sleep(5)
+    value_number_phone.entry_email_password("Marina-1973")
+
+# 2 тест # негативная проверка  введенного номера (короткий номер)
+def test_negative_number_phone_1(browser):
+    negative_number_1 = SearchPageHelper(browser)
+    negative_number_1.go_to_site()
+    time.sleep(20)
+    negative_number_1.click_word_phono()
+    time.sleep(10)
+    negative_number_1.entry_phone_number("89" + "\h")
+    time.sleep(5)
+    negative_text_1 = negative_number_1.entry_negative_phone_number()
+    assert negative_text_1 == "Неверный формат телефона"
+
+# 3 тест # негативная проверка  введенного номера (спецсимволы)-БАГ- переход на закладку 'логин'
+def test_negative_number_phone_2(browser):
+    negative_number_2 = SearchPageHelper(browser)
+    negative_number_2.go_to_site()
+    time.sleep(20)
+    negative_number_2.click_word_phono()
+    time.sleep(10)
+    negative_number_2.entry_phone_number("№№;;%%:::::;;№#####")
+    time.sleep(5)
+    negative_number_2.entry_email_password("Marina-1973")
+    time.sleep(10)
+    negative_number_2.driver.save_screenshot('test_3.png')
+
+# 4 тест # негативная проверка  введенного номера (кириллица)-Переход на закладку 'логин'
+def test_negative_number_phone_3(browser):
+    negative_number_3 = SearchPageHelper(browser)
+    negative_number_3.go_to_site()
+    time.sleep(20)
+    negative_number_3.click_word_phono()
+    time.sleep(10)
+    negative_number_3.entry_phone_number("абвгд")
+    time.sleep(5)
+    negative_number_3.entry_email_password("Marina-1973")
+    time.sleep(5)
+    negative_number_3.driver.save_screenshot('test_4.png')
+
+
+# 5 тест # валидная проверка связки Номер+Пароль
+def test_authorization_phone_number(browser):
+    authorization_phone_number = SearchPageHelper(browser)
+    authorization_phone_number.go_to_site()
+    time.sleep(20)
+    authorization_phone_number.click_word_phono()
+    time.sleep(10)
+    authorization_phone_number.entry_phone_number("89135397056")
+    time.sleep(5)
+    authorization_phone_number.entry_email_password("Marina-1973")
+    time.sleep(5)
+    authorization_phone_number.click_button_remember_me()
+    time.sleep(5)
+    authorization_phone_number.click_button_to_come_in()
+    time.sleep(10)
+
+# 6 тест # негативная проверка связки Номер+Пароль (неверный номер)
+def test_negative_number_or_password_1(browser):
+    authorization_number_or_password_1 = SearchPageHelper(browser)
+    authorization_number_or_password_1.go_to_site()
+    time.sleep(20)
+    authorization_number_or_password_1.click_word_phono()
+    time.sleep(10)
+    authorization_number_or_password_1.entry_phone_number("89135397040")
+    time.sleep(5)
+    authorization_number_or_password_1.entry_email_password("Marina-1973")
+    time.sleep(5)
+    authorization_number_or_password_1.click_button_remember_me()
+    time.sleep(5)
+    authorization_number_or_password_1.click_button_to_come_in()
+    time.sleep(10)
+    negative_text_login_or_password_1 = authorization_number_or_password_1.entry_negative_number_or_password()
+    assert negative_text_login_or_password_1 == "Неверный логин или пароль"
+
+# 7 тест # негативная проверка связки Номер+Пароль (неверный пароль)
+def test_negative_number_or_password_2(browser):
+    authorization_number_or_password_2 = SearchPageHelper(browser)
+    authorization_number_or_password_2.go_to_site()
+    time.sleep(20)
+    authorization_number_or_password_2.click_word_phono()
+    time.sleep(10)
+    authorization_number_or_password_2.entry_phone_number("89135397056")
+    time.sleep(5)
+    authorization_number_or_password_2.entry_email_password("marina1973")
+    time.sleep(5)
+    authorization_number_or_password_2.click_button_remember_me()
+    time.sleep(5)
+    authorization_number_or_password_2.click_button_to_come_in()
+    time.sleep(10)
+    negative_text_login_or_password_2 = authorization_number_or_password_2.entry_negative_number_or_password()
+    assert negative_text_login_or_password_2 == "Неверный логин или пароль"
+
+# 8 тест # Проверка ссылки "Забыл пароль"
+def test_negative_number_or_password_3(browser):
+    authorization_number_or_password_3 = SearchPageHelper(browser)
+    authorization_number_or_password_3.go_to_site()
+    time.sleep(20)
+    authorization_number_or_password_3.click_word_phono()
+    time.sleep(10)
+    authorization_number_or_password_3.entry_phone_number("89135397056")
+    time.sleep(5)
+    authorization_number_or_password_3.entry_email_password("marina1973")
+    time.sleep(5)
+    authorization_number_or_password_3.click_button_remember_me()
+    time.sleep(5)
+    authorization_number_or_password_3.click_button_to_come_in()
+    time.sleep(20)
+    authorization_number_or_password_3.click_forgot_password()
+    time.sleep(10)
+    authorization_number_or_password_3.entry_phone_number("89135397056")
+    time.sleep(20)
+    authorization_number_or_password_3.driver.save_screenshot('test_8.png')
+    authorization_number_or_password_3.click_button_come_back()
+    time.sleep(10)
+
+
+# 9 тест # проверка корректности введенной электронной почты
+def test_value_email_mail(browser):
+    value_email_mail = MailPageHelper(browser)
+    value_email_mail.go_to_site()
+    time.sleep(20)
+    value_email_mail.click_word_mail()
+    time.sleep(10)
+    value_email_mail.entry_email_mail("ma-karkashenko@mail.ru" +"\h")
+    time.sleep(5)
+
+# 10 тест # негативная проверка  введенной электронной почты (отсутствует собачка)-Баг
+def test_negative_email_mail_1(browser):
+    negative_email_mail_1 = MailPageHelper(browser)
+    negative_email_mail_1.go_to_site()
+    time.sleep(20)
+    negative_email_mail_1.click_word_mail()
+    time.sleep(10)
+    negative_email_mail_1.entry_email_mail("ma-karkashenkomail.ru" +"\h")
+    time.sleep(5)
+    negative_email_mail_1.driver.save_screenshot('test_10.png')
+
+
+# 11 тест # негативная проверка  введенной электронной почты (отсутствует точка)
+def test_negative_email_mail_2(browser):
+    negative_email_mail_2 = MailPageHelper(browser)
+    negative_email_mail_2.go_to_site()
+    time.sleep(20)
+    negative_email_mail_2.click_word_mail()
+    time.sleep(10)
+    negative_email_mail_2.entry_email_mail("ma-karkashenko@mailru" +"\h")
+    time.sleep(5)
+    negative_email_mail_2.driver.save_screenshot('test_11.png')
+
+# 12 тест # негативная проверка  введенной электронной почты (спецсимволы)- переход на закладку 'логин'
+def test_negative_email_mail_3(browser):
+    negative_email_mail_3 = MailPageHelper(browser)
+    negative_email_mail_3.go_to_site()
+    time.sleep(20)
+    negative_email_mail_3.click_word_mail()
+    time.sleep(10)
+    negative_email_mail_3.entry_email_mail("№;%::?" +"\h")
+    time.sleep(5)
+    negative_email_mail_3.entry_mail_password("Marina-1973")
+    negative_email_mail_3.driver.save_screenshot('test_12.png')
+
+# 13 тест # валидная проверка связки Почта+Пароль
+def test_value_mail_password(browser):
+    value_mail_password = MailPageHelper(browser)
+    value_mail_password.go_to_site()
+    time.sleep(20)
+    value_mail_password.click_word_mail()
+    time.sleep(10)
+    value_mail_password.entry_email_mail("ma-karkashenko@mail.ru")
+    time.sleep(5)
+    value_mail_password.entry_mail_password("Marina-1973")
+    time.sleep(5)
+    value_mail_password.click_mail_button_remember_me()
+    time.sleep(5)
+    value_mail_password.click_mail_button_to_come_in()
+    time.sleep(10)
+
+# 14 тест # негативная проверка связки Почта+Пароль (неверный email)
+def test_negative_mail_or_password_1(browser):
+    negative_mail_or_password_1 = MailPageHelper(browser)
+    negative_mail_or_password_1.go_to_site()
+    time.sleep(20)
+    negative_mail_or_password_1.click_word_mail()
+    time.sleep(10)
+    negative_mail_or_password_1.entry_email_mail("ma.karkashenko@gmail.com")
+    time.sleep(5)
+    negative_mail_or_password_1.entry_mail_password("Marina-1973")
+    time.sleep(5)
+    negative_mail_or_password_1.click_mail_button_remember_me()
+    time.sleep(5)
+    negative_mail_or_password_1.click_mail_button_to_come_in()
+    time.sleep(10)
+    negative_mail_or_password_1.driver.save_screenshot('test_14.png')
+    negative_text_mail_or_password_1 = negative_mail_or_password_1.mail_wrong_login_or_password()
+    assert negative_text_mail_or_password_1 == "Неверный логин или пароль"
+
+# 15 тест # негативная проверка связки Почта+Пароль (неверный пароль)
+def test_negative_mail_or_password_2(browser):
+    negative_mail_or_password_2 = MailPageHelper(browser)
+    negative_mail_or_password_2.go_to_site()
+    time.sleep(20)
+    negative_mail_or_password_2.click_word_mail()
+    time.sleep(10)
+    negative_mail_or_password_2.entry_email_mail("ma-karkashenko@mail.ru")
+    time.sleep(5)
+    negative_mail_or_password_2.entry_mail_password("marina1973")
+    time.sleep(5)
+    negative_mail_or_password_2.click_mail_button_remember_me()
+    time.sleep(5)
+    negative_mail_or_password_2.click_mail_button_to_come_in()
+    time.sleep(10)
+    negative_mail_or_password_2.driver.save_screenshot('test_15.png')
+    negative_text_mail_or_password_2 = negative_mail_or_password_2.mail_wrong_login_or_password()
+    assert negative_text_mail_or_password_2 == "Неверный логин или пароль"
+
+# 16 тест # негативная проверка  связки Логин+Пароль (логин -пустое поле)
+def test_negative_entry_login_1(browser):
+    negative_entry_login_1 = LoginPageHelper(browser)
+    negative_entry_login_1.go_to_site()
+    time.sleep(20)
+    negative_entry_login_1.click_word_login()
+    time.sleep(10)
+    negative_entry_login_1.entry_in_field_login(" ")
+    time.sleep(5)
+    negative_entry_login_1.entry_login_password("Marina-1973")
+    time.sleep(10)
+    negative_entry_login_1.click_login_button_remember_me()
+    time.sleep(5)
+    negative_entry_login_1.click_login_button_to_come_in()
+    time.sleep(10)
+    negative_text_entry_login_1 = negative_entry_login_1.your_login_when_registering()
+    assert negative_text_entry_login_1 == "Введите логин, указанный при регистрации"
+
+# 17 тест # негативная проверка  связки Логин+Пароль (пароль -пустое поле)-БАГ(нет инфо, чтобы заполнить поле пароль)
+def test_negative_entry_login_2(browser):
+    negative_entry_login_2 = LoginPageHelper(browser)
+    negative_entry_login_2.go_to_site()
+    time.sleep(20)
+    negative_entry_login_2.click_word_login()
+    time.sleep(10)
+    negative_entry_login_2.entry_in_field_login("123456")
+    time.sleep(5)
+    negative_entry_login_2.entry_login_password(" " + "\h")
+    time.sleep(10)
+    negative_entry_login_2.click_login_button_remember_me()
+    time.sleep(5)
+    negative_entry_login_2.click_login_button_to_come_in()
+    time.sleep(10)
+    negative_entry_login_2.driver.save_screenshot('test_17.png')
+
+# 18 тест # негативная проверка  связки Логин+Пароль (логин -неверный логин)
+def test_negative_entry_login_3(browser):
+    negative_entry_login_3 = LoginPageHelper(browser)
+    negative_entry_login_3.go_to_site()
+    time.sleep(20)
+    negative_entry_login_3.click_word_login()
+    time.sleep(10)
+    negative_entry_login_3.entry_in_field_login("123456")
+    time.sleep(5)
+    negative_entry_login_3.entry_login_password("Marina-1973")
+    time.sleep(10)
+    negative_entry_login_3.click_login_button_remember_me()
+    time.sleep(5)
+    negative_entry_login_3.click_login_button_to_come_in()
+    time.sleep(10)
+    negative_text_entry_login_3 = negative_entry_login_3.login_wrong_login_or_password()
+    assert negative_text_entry_login_3 == "Неверный логин или пароль"
+
+# 19 тест # Негативная проверка некорректного ввода лицевого счета (неверный лицевой счет)
+def test_negative_entry_personal_account_1(browser):
+    negative_entry_personal_account_1 = PersonalAccountPageHelper(browser)
+    negative_entry_personal_account_1.go_to_site()
+    time.sleep(20)
+    negative_entry_personal_account_1.click_word_personal_account()
+    time.sleep(10)
+    negative_entry_personal_account_1.entry_in_field_personal_account("123456")
+    time.sleep(5)
+    negative_entry_personal_account_1.entry_personal_account_password("Marina-1973")
+    time.sleep(10)
+    negative_entry_personal_account_1.click_personal_account_button_remember_me()
+    time.sleep(5)
+    negative_entry_personal_account_1.click_personal_account_button_to_come_in()
+    time.sleep(10)
+    login_linked_to_personal_account_1 = negative_entry_personal_account_1.personal_account_wrong_login_or_password()
+    assert login_linked_to_personal_account_1 == "Неверный логин или пароль"
+
+# 20 тест # негативная проверка восстановление пароля через номер телефона (неверный ввод символов)-
+# Баг формулировка "Неправильный Логин?? или пароль"
+def test_recovery_password_through_phone(browser):
+    recovery_password_through_phone = RecoveryPageHelper(browser)
+    recovery_password_through_phone.go_to_site()
+    time.sleep(20)
+    recovery_password_through_phone.click_word_phone_recovery()
+    time.sleep(10)
+    recovery_password_through_phone.entry_field_phone_or_mail_or_login_or_personalaccount("89135397056")
+    time.sleep(5)
+    recovery_password_through_phone.entry_password_field("marina1973")
+    time.sleep(10)
+    recovery_password_through_phone.click_button_to_come_in_recovery()
+    time.sleep(10)
+    recovery_password_through_phone.click_link_forgot_password_recovery()
+    time.sleep(10)
+    recovery_password_through_phone.click_word_phone_recovery()
+    time.sleep(10)
+    recovery_password_through_phone.entry_field_phone_or_mail_or_login_or_personalaccount("89135397056")
+    time.sleep(5)
+    recovery_password_through_phone.entry_field_symbols("777777")
+    time.sleep(5)
+    recovery_password_through_phone.click_button_continue_recovery()
+    time.sleep(10)
+    invalid_username_or_text_from_image_1 = recovery_password_through_phone.recovery_wrong_login_or_text_with_pictures()
+    assert invalid_username_or_text_from_image_1 == "Неверный логин или текст с картинки"
+
+# 21 тест # негативная проверка восстановление пароля через почту (неверный ввод символов) -
+# Баг формулировка "Неправильный Логин?? или пароль"
+def test_recovery_password_through_mail(browser):
+    recovery_password_through_mail = RecoveryPageHelper(browser)
+    recovery_password_through_mail.go_to_site()
+    time.sleep(20)
+    recovery_password_through_mail.click_word_mail_recovery()
+    time.sleep(10)
+    recovery_password_through_mail.entry_field_phone_or_mail_or_login_or_personalaccount("ma-karkashenko@mail.ru")
+    time.sleep(5)
+    recovery_password_through_mail.entry_password_field("marina1973")
+    time.sleep(10)
+    recovery_password_through_mail.click_button_to_come_in_recovery()
+    time.sleep(10)
+    recovery_password_through_mail.click_link_forgot_password_recovery()
+    time.sleep(10)
+    recovery_password_through_mail.click_word_mail_recovery()
+    time.sleep(10)
+    recovery_password_through_mail.entry_field_phone_or_mail_or_login_or_personalaccount("89135397056")
+    time.sleep(5)
+    recovery_password_through_mail.entry_field_symbols("aaaaaaa")
+    time.sleep(5)
+    recovery_password_through_mail.click_button_continue_recovery()
+    time.sleep(10)
+    invalid_username_or_text_from_image_2 = recovery_password_through_mail.recovery_wrong_login_or_text_with_pictures()
+    assert invalid_username_or_text_from_image_2 == "Неверный логин или текст с картинки"
+
+
+# 22 тест # негативная проверка восстановление пароля через логин  (неверный ввод символов)
+def test_recovery_password_through_login(browser):
+    recovery_password_through_login = RecoveryPageHelper(browser)
+    recovery_password_through_login.go_to_site()
+    time.sleep(20)
+    recovery_password_through_login.click_word_login_recovery()
+    time.sleep(10)
+    recovery_password_through_login.entry_field_phone_or_mail_or_login_or_personalaccount("123456")
+    time.sleep(5)
+    recovery_password_through_login.entry_password_field("Marina-1973")
+    time.sleep(10)
+    recovery_password_through_login.click_button_to_come_in_recovery()
+    time.sleep(10)
+    recovery_password_through_login.click_link_forgot_password_recovery()
+    time.sleep(10)
+    recovery_password_through_login.click_word_login_recovery()
+    time.sleep(10)
+    recovery_password_through_login.entry_field_phone_or_mail_or_login_or_personalaccount("123456")
+    time.sleep(5)
+    recovery_password_through_login.entry_field_symbols("ssssss")
+    time.sleep(5)
+    recovery_password_through_login.click_button_continue_recovery()
+    time.sleep(10)
+    invalid_username_or_text_from_image_3 = recovery_password_through_login.recovery_wrong_login_or_text_with_pictures()
+    assert invalid_username_or_text_from_image_3 == "Неверный логин или текст с картинки"
+
+# 23 тест # негативная проверка восстановление пароля через лицевой счет (неверный ввод символов)-
+# Баг формулировка "Неправильный Логин?? или пароль"
+def test_recovery_password_through_personal_account(browser):
+    recovery_password_through_personal_account = RecoveryPageHelper(browser)
+    recovery_password_through_personal_account.go_to_site()
+    time.sleep(20)
+    recovery_password_through_personal_account.click_word_personal_account_recovery()
+    time.sleep(10)
+    recovery_password_through_personal_account.entry_field_phone_or_mail_or_login_or_personalaccount("123456")
+    time.sleep(5)
+    recovery_password_through_personal_account.entry_password_field("Marina-1973")
+    time.sleep(10)
+    recovery_password_through_personal_account.click_button_to_come_in_recovery()
+    time.sleep(10)
+    recovery_password_through_personal_account.click_link_forgot_password_recovery()
+    time.sleep(10)
+    recovery_password_through_personal_account.click_word_personal_account_recovery()
+    time.sleep(10)
+    recovery_password_through_personal_account.entry_field_phone_or_mail_or_login_or_personalaccount("123456")
+    time.sleep(5)
+    recovery_password_through_personal_account.entry_field_symbols("#####")
+    time.sleep(5)
+    recovery_password_through_personal_account.click_button_continue_recovery()
+    time.sleep(10)
+    invalid_username_or_text_from_image_4 = recovery_password_through_personal_account.recovery_wrong_login_or_text_with_pictures()
+    assert invalid_username_or_text_from_image_4 == "Неверный логин или текст с картинки"
+
+# 24 тест # Проверка валидность ссылки "вернуться назад"
+
+def test_recovery_password_link_come_back(browser):
+    recovery_password_link_come_back = RecoveryPageHelper(browser)
+    recovery_password_link_come_back.go_to_site()
+    time.sleep(20)
+    recovery_password_link_come_back.click_word_personal_account_recovery()
+    time.sleep(10)
+    recovery_password_link_come_back.entry_field_phone_or_mail_or_login_or_personalaccount("123456")
+    time.sleep(5)
+    recovery_password_link_come_back.entry_password_field("Marina-1973")
+    time.sleep(10)
+    recovery_password_link_come_back.click_button_to_come_in_recovery()
+    time.sleep(10)
+    recovery_password_link_come_back.click_link_forgot_password_recovery()
+    time.sleep(10)
+    recovery_password_link_come_back.click_link_come_back_recovery()
+    time.sleep(10)
+    authorization_page_word_text = recovery_password_link_come_back.recovery_word_authorization_text()
+    assert authorization_page_word_text == "Авторизация"
+
+# 25 тест # проверка ссылки  "регистрация" переход на другую страницу
+def test_check_link_registration(browser):
+    check_link_registration = SearchHelper(browser)
+    check_link_registration.go_to_site()
+    time.sleep(20)
+    check_link_registration.click_word_registration()
+    time.sleep(10)
+    registration_page_word_text = check_link_registration.page_registration_word_text()
+    assert registration_page_word_text == "Регистрация"
+
+# 26 тест # проверка корректного ввода имени на странице "регистрация"
+def test_input_valid_name_registration(browser):
+    input_valid_name = SearchHelper(browser)
+    input_valid_name.go_to_site()
+    time.sleep(20)
+    input_valid_name.click_word_registration()
+    time.sleep(10)
+    input_valid_name.word_name_registration("Марина" + "\h")
+    time.sleep(10)
+    input_valid_name.driver.save_screenshot('test_26.png')
+
+# 27 тест # проверка неверного ввода имени на странице "регистрация" (<2 букв кириллица)
+def test_negative_input_valid_name_registration_1(browser):
+    negative_input_valid_name_1 = SearchHelper(browser)
+    negative_input_valid_name_1.go_to_site()
+    time.sleep(20)
+    negative_input_valid_name_1.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_name_1.word_name_registration("Я" + "\h")
+    time.sleep(10)
+    note_by_name_text_1 = negative_input_valid_name_1.registration_comment_by_name_or_family()
+    assert note_by_name_text_1 == "Необходимо заполнить поле кириллицей. От 2 до 30 символов."
+
+# 28 тест # проверка неверного ввода имени на странице "регистрация" (латиница)
+def test_negative_input_valid_name_registration_2(browser):
+    negative_input_valid_name_2 = SearchHelper(browser)
+    negative_input_valid_name_2.go_to_site()
+    time.sleep(20)
+    negative_input_valid_name_2.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_name_2.word_name_registration("Sara" + "\h")
+    time.sleep(10)
+    note_by_name_text_2 = negative_input_valid_name_2.registration_comment_by_name_or_family()
+    assert note_by_name_text_2 == "Необходимо заполнить поле кириллицей. От 2 до 30 символов."
+
+# 29 тест # проверка корректного ввода фамилии на странице "регистрация"
+def test_input_valid_family_registration(browser):
+    input_valid_family = SearchHelper(browser)
+    input_valid_family.go_to_site()
+    time.sleep(20)
+    input_valid_family.click_word_registration()
+    time.sleep(10)
+    input_valid_family.word_name_registration("Марина")
+    time.sleep(10)
+    input_valid_family.word_family_registration("Каркашенко" + "\h")
+    time.sleep(10)
+    input_valid_family.driver.save_screenshot('test_29.png')
+
+# 30 тест # проверка неверного  ввода фамилии на странице "регистрация" (<2 букв кириллица)
+def test_negative_input_valid_family_registration_1(browser):
+    negative_input_valid_family_1 = SearchHelper(browser)
+    negative_input_valid_family_1.go_to_site()
+    time.sleep(20)
+    negative_input_valid_family_1.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_family_1.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_valid_family_1.word_family_registration("К" + "\h")
+    time.sleep(10)
+    comment_by_family_text_1 = negative_input_valid_family_1.registration_comment_by_name_or_family()
+    assert comment_by_family_text_1 == "Необходимо заполнить поле кириллицей. От 2 до 30 символов."
+
+# 31 тест # проверка неверного  ввода фамилии на странице "регистрация" (латиница)
+def test_negative_input_valid_family_registration_2(browser):
+    negative_input_valid_family_2 = SearchHelper(browser)
+    negative_input_valid_family_2.go_to_site()
+    time.sleep(20)
+    negative_input_valid_family_2.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_family_2.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_valid_family_2.word_family_registration("Ivanov" + "\h")
+    time.sleep(10)
+    comment_by_family_text_2 = negative_input_valid_family_2.registration_comment_by_name_or_family()
+    assert comment_by_family_text_2 == "Необходимо заполнить поле кириллицей. От 2 до 30 символов."
+
+# 32 тест # проверка корректного  ввода email на странице "регистрация"
+def test_input_valid_email_registration(browser):
+    input_valid_email_registration = SearchHelper(browser)
+    input_valid_email_registration.go_to_site()
+    time.sleep(20)
+    input_valid_email_registration.click_word_registration()
+    time.sleep(10)
+    input_valid_email_registration.word_name_registration("Марина")
+    time.sleep(10)
+    input_valid_email_registration.word_family_registration("Каркашенко")
+    time.sleep(10)
+    input_valid_email_registration.registration_email_or_phone("ma-karkashenko@mail.ru" + "\h")
+    time.sleep(10)
+    input_valid_email_registration.driver.save_screenshot('test_32.png')
+
+# 33 тест # проверка неверного  ввода email на странице "регистрация" (отсутствует @)
+def test_negative_input_valid_email_registration_1(browser):
+    negative_input_valid_email_1 = SearchHelper(browser)
+    negative_input_valid_email_1.go_to_site()
+    time.sleep(20)
+    negative_input_valid_email_1.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_email_1.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_valid_email_1.word_family_registration("Каркашенко")
+    time.sleep(10)
+    negative_input_valid_email_1.registration_email_or_phone("ma-karkashenkomail.ru" + "\h")
+    time.sleep(10)
+    comment_by_email_text_1 = negative_input_valid_email_1.registration_comment_by_email_or_phone()
+    assert comment_by_email_text_1 == "Введите телефон в формате +7ХХХХХХХХХХ или +375XXXXXXXXX, или email в формате example@email.ru"
+
+
+# 34 тест # проверка неверного  ввода email на странице "регистрация" (отсутствует точка (.))
+def test_negative_input_valid_email_registration_2(browser):
+    negative_input_valid_email_2 = SearchHelper(browser)
+    negative_input_valid_email_2.go_to_site()
+    time.sleep(20)
+    negative_input_valid_email_2.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_email_2.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_valid_email_2.word_family_registration("Каркашенко")
+    time.sleep(10)
+    negative_input_valid_email_2.registration_email_or_phone("ma-karkashenko@mailru" + "\h")
+    time.sleep(10)
+    comment_by_email_text_2 = negative_input_valid_email_2.registration_comment_by_email_or_phone()
+    assert comment_by_email_text_2 == "Введите телефон в формате +7ХХХХХХХХХХ или +375XXXXXXXXX, или email в формате example@email.ru"
+
+
+# 35 тест # проверка корректного  ввода номер телефона на странице "регистрация"
+def test_input_valid_phone_registration(browser):
+    input_valid_phone_registration = SearchHelper(browser)
+    input_valid_phone_registration.go_to_site()
+    time.sleep(20)
+    input_valid_phone_registration.click_word_registration()
+    time.sleep(10)
+    input_valid_phone_registration.word_name_registration("Марина")
+    time.sleep(10)
+    input_valid_phone_registration.word_family_registration("Каркашенко")
+    time.sleep(10)
+    input_valid_phone_registration.registration_email_or_phone("89135397056" + "\h")
+    time.sleep(10)
+    input_valid_phone_registration.driver.save_screenshot('test_32.png')
+
+# 36 тест # проверка неверного  ввода номер телефона на странице "регистрация" (короткий номер)
+def test_negative_input_valid_phone_registration_1(browser):
+    negative_input_valid_phone_registration_1 = SearchHelper(browser)
+    negative_input_valid_phone_registration_1.go_to_site()
+    time.sleep(20)
+    negative_input_valid_phone_registration_1.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_phone_registration_1.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_valid_phone_registration_1.word_family_registration("Каркашенко")
+    time.sleep(10)
+    negative_input_valid_phone_registration_1.registration_email_or_phone("89" + "\h")
+    time.sleep(10)
+    comment_by_phone_text_1 = negative_input_valid_phone_registration_1.registration_comment_by_email_or_phone()
+    assert comment_by_phone_text_1 == "Введите телефон в формате +7ХХХХХХХХХХ или +375XXXXXXXXX, или email в формате example@email.ru"
+
+
+# 37 тест # проверка неверного  ввода номер телефона на странице "регистрация" (длинный номер)
+def test_negative_input_valid_phone_registration_2(browser):
+    negative_input_valid_phone_registration_2 = SearchHelper(browser)
+    negative_input_valid_phone_registration_2.go_to_site()
+    time.sleep(20)
+    negative_input_valid_phone_registration_2.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_phone_registration_2.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_valid_phone_registration_2.word_family_registration("Каркашенко")
+    time.sleep(10)
+    negative_input_valid_phone_registration_2.registration_email_or_phone("89999999999999" + "\h")
+    time.sleep(10)
+    comment_by_phone_text_2 = negative_input_valid_phone_registration_2.registration_comment_by_email_or_phone()
+    assert comment_by_phone_text_2 == "Введите телефон в формате +7ХХХХХХХХХХ или +375XXXXXXXXX, или email в формате example@email.ru"
+
+# 38 тест # проверка корректного  ввода пароль на странице "регистрация"
+def test_input_valid_password_registration(browser):
+    input_valid_password_registration = SearchHelper(browser)
+    input_valid_password_registration.go_to_site()
+    time.sleep(20)
+    input_valid_password_registration.click_word_registration()
+    time.sleep(10)
+    input_valid_password_registration.word_name_registration("Марина")
+    time.sleep(10)
+    input_valid_password_registration.word_family_registration("Каркашенко")
+    time.sleep(10)
+    input_valid_password_registration.registration_email_or_phone("89135397056")
+    time.sleep(10)
+    input_valid_password_registration.registration_password("Marina-1973")
+    time.sleep(10)
+    input_valid_password_registration.driver.save_screenshot('test_38.png')
+
+# 39 тест # проверка неверного  ввода пароль на странице "регистрация" (длина менее 8 символов)
+def test_negative_input_valid_password_registration_1(browser):
+    negative_input_valid_password_registration_1 = SearchHelper(browser)
+    negative_input_valid_password_registration_1.go_to_site()
+    time.sleep(20)
+    negative_input_valid_password_registration_1.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_password_registration_1.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_valid_password_registration_1.word_family_registration("Каркашенко")
+    time.sleep(10)
+    negative_input_valid_password_registration_1.registration_email_or_phone("89135397056")
+    time.sleep(10)
+    negative_input_valid_password_registration_1.registration_password("Ma" + "\h")
+    time.sleep(10)
+    comment_password_text_1 = negative_input_valid_password_registration_1.registration_comment_length_password()
+    assert comment_password_text_1 == "Длина пароля должна быть не менее 8 символов"
+
+
+# 40 тест # проверка неверного  ввода пароль на странице "регистрация" (группа цифр)
+def test_negative_input_valid_password_registration_2(browser):
+    negative_input_valid_password_registration_2 = SearchHelper(browser)
+    negative_input_valid_password_registration_2.go_to_site()
+    time.sleep(20)
+    negative_input_valid_password_registration_2.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_password_registration_2.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_valid_password_registration_2.word_family_registration("Каркашенко")
+    time.sleep(10)
+    negative_input_valid_password_registration_2.registration_email_or_phone("89135397056")
+    time.sleep(10)
+    negative_input_valid_password_registration_2.registration_password("12345678" + "\h")
+    time.sleep(10)
+    comment_password_text_2 = negative_input_valid_password_registration_2.registration_comment_uppercase_password()
+    assert comment_password_text_2 == "Пароль должен содержать хотя бы одну заглавную букву"
+
+
+# 41 тест # проверка неверного  ввода пароль на странице "регистрация" (Заглавные буквы + цифры)-
+#  БАГ - Прописная буква - буква, которая увеличена в размере относительно к строчным буквам.
+#                          Т.е. это и есть Заглавная.
+def test_negative_input_valid_password_registration_3(browser):
+    negative_input_valid_password_registration_3 = SearchHelper(browser)
+    negative_input_valid_password_registration_3.go_to_site()
+    time.sleep(20)
+    negative_input_valid_password_registration_3.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_password_registration_3.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_valid_password_registration_3.word_family_registration("Каркашенко")
+    time.sleep(10)
+    negative_input_valid_password_registration_3.registration_email_or_phone("89135397056")
+    time.sleep(10)
+    negative_input_valid_password_registration_3.registration_password("MARINA1973" + "\h")
+    time.sleep(10)
+    comment_password_text_3 = negative_input_valid_password_registration_3.registration_comment_lowercase_password()
+    assert comment_password_text_3 == "Пароль должен содержать хотя бы одну прописную букву"
+
+
+# 42 тест # проверка неверного  ввода пароль на странице "регистрация" (строчные и прописные кириллицы + цифры)
+def test_negative_input_valid_password_registration_4(browser):
+    negative_input_valid_password_registration_4 = SearchHelper(browser)
+    negative_input_valid_password_registration_4.go_to_site()
+    time.sleep(20)
+    negative_input_valid_password_registration_4.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_password_registration_4.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_valid_password_registration_4.word_family_registration("Каркашенко")
+    time.sleep(10)
+    negative_input_valid_password_registration_4.registration_email_or_phone("89135397056")
+    time.sleep(10)
+    negative_input_valid_password_registration_4.registration_password("Марина1973" + "\h")
+    time.sleep(10)
+    comment_password_text_4 = negative_input_valid_password_registration_4.registration_comment_latin_password()
+    assert comment_password_text_4 == "Пароль должен содержать только латинские буквы"
+
+
+# 43 тест # проверка неверного  ввода пароль на странице "регистрация" (спецсимволы)
+def test_negative_input_valid_password_registration_5(browser):
+    negative_input_valid_password_registration_5 = SearchHelper(browser)
+    negative_input_valid_password_registration_5.go_to_site()
+    time.sleep(20)
+    negative_input_valid_password_registration_5.click_word_registration()
+    time.sleep(10)
+    negative_input_valid_password_registration_5.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_valid_password_registration_5.word_family_registration("Каркашенко")
+    time.sleep(10)
+    negative_input_valid_password_registration_5.registration_email_or_phone("89135397056")
+    time.sleep(10)
+    negative_input_valid_password_registration_5.registration_password("№№№№№№№№№№" + "\h")
+    time.sleep(10)
+    comment_password_text_5 = negative_input_valid_password_registration_5.registration_comment_symbols_password()
+    assert comment_password_text_5 == "Пароль должен содержать хотя бы 1 спецсимвол или хотя бы одну цифру"
+
+# 44 тест # проверка неверного  ввода подтверждение пароля на странице "регистрация" (строчные латиница + цифры)-
+# БАГ - по ТРЕБОВАНИЯМ - "Пароли не совпадают"
+def test_negative_input_password_confirmation_registration_1(browser):
+    negative_input_password_confirmation_registration_1 = SearchHelper(browser)
+    negative_input_password_confirmation_registration_1.go_to_site()
+    time.sleep(20)
+    negative_input_password_confirmation_registration_1.click_word_registration()
+    time.sleep(10)
+    negative_input_password_confirmation_registration_1.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_password_confirmation_registration_1.word_family_registration("Каркашенко")
+    time.sleep(10)
+    negative_input_password_confirmation_registration_1.registration_email_or_phone("89135397056")
+    time.sleep(10)
+    negative_input_password_confirmation_registration_1.registration_password("Marina-1973")
+    time.sleep(10)
+    negative_input_password_confirmation_registration_1.registration_password_confirmation("marina1973")
+    time.sleep(10)
+    comment_password_confirmation_text_1 = negative_input_password_confirmation_registration_1.registration_comment_uppercase_password()
+    assert comment_password_confirmation_text_1 == "Пароль должен содержать хотя бы одну заглавную букву"
+
+# 45 тест # проверка неверного  ввода подтверждение пароля на странице "регистрация" (прописные латиница + цифры)-
+# БАГ - по ТРЕБОВАНИЯМ - "Пароли не совпадают"
+def test_negative_input_password_confirmation_registration_2(browser):
+    negative_input_password_confirmation_registration_2 = SearchHelper(browser)
+    negative_input_password_confirmation_registration_2.go_to_site()
+    time.sleep(20)
+    negative_input_password_confirmation_registration_2.click_word_registration()
+    time.sleep(10)
+    negative_input_password_confirmation_registration_2.word_name_registration("Марина")
+    time.sleep(10)
+    negative_input_password_confirmation_registration_2.word_family_registration("Каркашенко")
+    time.sleep(10)
+    negative_input_password_confirmation_registration_2.registration_email_or_phone("89135397056")
+    time.sleep(10)
+    negative_input_password_confirmation_registration_2.registration_password("Marina-1973")
+    time.sleep(10)
+    negative_input_password_confirmation_registration_2.registration_password_confirmation("MARINA1973")
+    time.sleep(10)
+    comment_password_confirmation_text_2 = negative_input_password_confirmation_registration_2.registration_comment_lowercase_password()
+    assert comment_password_confirmation_text_2 == "Пароль должен содержать хотя бы одну прописную букву"
+
+# 46 тест # проверка наличии кнопки "продолжить" при корректном заполнении всех полей на странице "Регистрация"
+# (п.9 Документальное требование Ростелеком)
+def test_continue_button_system_registration(browser):
+    continue_button_system_registration = SearchHelper(browser)
+    continue_button_system_registration.go_to_site()
+    time.sleep(20)
+    continue_button_system_registration.click_word_registration()
+    time.sleep(10)
+    continue_button_system_registration.word_name_registration("Марина")
+    time.sleep(10)
+    continue_button_system_registration.word_family_registration("Каркашенко")
+    time.sleep(10)
+    continue_button_system_registration.registration_email_or_phone("89135397056")
+    time.sleep(10)
+    continue_button_system_registration.registration_password("Marina-1973")
+    time.sleep(10)
+    continue_button_system_registration.registration_password_confirmation("Marina-1973")
+    time.sleep(10)
+    continue_button_system_registration.driver.save_screenshot('test_46.png')
+
+
+
+# 47 тест # проверка привязки телефона к имеющейся УЗ SSO
+def test_linking_phone_system_registration(browser):
+    linking_phone_system_registration = SearchHelper(browser)
+    linking_phone_system_registration.go_to_site()
+    time.sleep(20)
+    linking_phone_system_registration.click_word_registration()
+    time.sleep(10)
+    linking_phone_system_registration.word_name_registration("Марина")
+    time.sleep(10)
+    linking_phone_system_registration.word_family_registration("Каркашенко")
+    time.sleep(10)
+    linking_phone_system_registration.registration_email_or_phone("89135397056")
+    time.sleep(10)
+    linking_phone_system_registration.registration_password("Marina-1973")
+    time.sleep(10)
+    linking_phone_system_registration.registration_password_confirmation("Marina-1973")
+    time.sleep(10)
+    linking_phone_system_registration.click_button_register()
+    time.sleep(10)
+    comment_account_exists_text_1 = linking_phone_system_registration.registration_account_exists()
+    assert comment_account_exists_text_1 == "Учётная запись уже существует"
+
+
+# 48 тест # проверка привязки Email к имеющейся УЗ SSO
+def test_linking_email_system_registration(browser):
+    linking_email_system_registration = SearchHelper(browser)
+    linking_email_system_registration.go_to_site()
+    time.sleep(20)
+    linking_email_system_registration.click_word_registration()
+    time.sleep(10)
+    linking_email_system_registration.word_name_registration("Марина")
+    time.sleep(10)
+    linking_email_system_registration.word_family_registration("Каркашенко")
+    time.sleep(10)
+    linking_email_system_registration.registration_email_or_phone("ma-karkashenko@mail.ru")
+    time.sleep(10)
+    linking_email_system_registration.registration_password("Marina-1973")
+    time.sleep(10)
+    linking_email_system_registration.registration_password_confirmation("Marina-1973")
+    time.sleep(10)
+    linking_email_system_registration.click_button_register()
+    time.sleep(10)
+    comment_account_exists_text_2 = linking_email_system_registration.registration_account_exists()
+    assert comment_account_exists_text_2 == "Учётная запись уже существует"
+
+
+# 49 тест # проверка валидности кнопки Войти в оповещательной форме "Учетная запись уже существует"
+def test_button_come_login_account(browser):
+    button_come_login_account = SearchHelper(browser)
+    button_come_login_account.go_to_site()
+    time.sleep(20)
+    button_come_login_account.click_word_registration()
+    time.sleep(10)
+    button_come_login_account.word_name_registration("Марина")
+    time.sleep(10)
+    button_come_login_account.word_family_registration("Каркашенко")
+    time.sleep(10)
+    button_come_login_account.registration_email_or_phone("ma-karkashenko@mail.ru")
+    time.sleep(10)
+    button_come_login_account.registration_password("Marina-1973")
+    time.sleep(10)
+    button_come_login_account.registration_password_confirmation("Marina-1973")
+    time.sleep(10)
+    button_come_login_account.click_button_register()
+    time.sleep(10)
+    button_come_login_account.click_button_login_to_account()
+    time.sleep(10)
+    button_come_login_account.driver.save_screenshot('test_49.png')
+
+# 50 тест # проверка валидности кнопки "Х" в оповещательной форме "Учетная запись уже существует"
+def test_button_X_login_account(browser):
+    button_X_login_account = SearchHelper(browser)
+    button_X_login_account.go_to_site()
+    time.sleep(20)
+    button_X_login_account.click_word_registration()
+    time.sleep(10)
+    button_X_login_account.word_name_registration("Марина")
+    time.sleep(10)
+    button_X_login_account.word_family_registration("Каркашенко")
+    time.sleep(10)
+    button_X_login_account.registration_email_or_phone("ma-karkashenko@mail.ru")
+    time.sleep(10)
+    button_X_login_account.registration_password("Marina-1973")
+    time.sleep(10)
+    button_X_login_account.registration_password_confirmation("Marina-1973")
+    time.sleep(10)
+    button_X_login_account.click_button_register()
+    time.sleep(10)
+    button_X_login_account.driver.save_screenshot('test_50.png')
+
+# 51 тест # проверка валидности ссылки "Восстановление пароля" в оповещательной форме "Учетная запись уже существует"
+def test_link_password_recovery_login_account(browser):
+    link_password_recovery_login_account = SearchHelper(browser)
+    link_password_recovery_login_account.go_to_site()
+    time.sleep(20)
+    link_password_recovery_login_account.click_word_registration()
+    time.sleep(10)
+    link_password_recovery_login_account.word_name_registration("Марина")
+    time.sleep(10)
+    link_password_recovery_login_account.word_family_registration("Каркашенко")
+    time.sleep(10)
+    link_password_recovery_login_account.registration_email_or_phone("ma-karkashenko@mail.ru")
+    time.sleep(10)
+    link_password_recovery_login_account.registration_password("Marina-1973")
+    time.sleep(10)
+    link_password_recovery_login_account.registration_password_confirmation("Marina-1973")
+    time.sleep(10)
+    link_password_recovery_login_account.click_button_register()
+    time.sleep(10)
+    link_password_recovery_login_account.click_link_password_recovery()
+    time.sleep(10)
+    link_password_recovery_login_account.driver.save_screenshot('test_51.png')
+
+# 52 тест # валидная проверка перехода на страницу "Авторизация по коду"
+def test_go_to_authorization_page_by_code(browser):
+    authorization_page_by_code = TemporaryCodePageHelper(browser)
+    authorization_page_by_code.go_to_site()
+    time.sleep(20)
+    authorization_page_by_code.click_word_phono_authoriz()
+    time.sleep(10)
+    authorization_page_by_code.entry_phone_number_authoriz("89135397056")
+    time.sleep(5)
+    authorization_page_by_code.entry_email_password_authoriz("Marina-1973")
+    time.sleep(5)
+    authorization_page_by_code.click_button_remember_authoriz()
+    time.sleep(10)
+    authorization_page_by_code.click_button_to_come_in_authoriz()
+    time.sleep(20)
+    authorization_page_by_code.click_link_private_office()
+    time.sleep(10)
+    authorization_page_by_code.click_link_private_office_username()
+    time.sleep(10)
+    authorization_page_by_code.click_link_office_username_log_off()
+    time.sleep(10)
+    authorization_page_by_code.driver.save_screenshot('test_52.png')
+
+# 53 тест # Проверка перехода на страницу "Код подтверждения отправлен"
+def test_confirmation_code_sent_page(browser):
+    confirmation_code_sent_page = TemporaryCodePageHelper(browser)
+    confirmation_code_sent_page.go_to_site()
+    time.sleep(20)
+    confirmation_code_sent_page.click_word_phono_authoriz()
+    time.sleep(10)
+    confirmation_code_sent_page.entry_phone_number_authoriz("89135397056")
+    time.sleep(5)
+    confirmation_code_sent_page.entry_email_password_authoriz("Marina-1973")
+    time.sleep(5)
+    confirmation_code_sent_page.click_button_remember_authoriz()
+    time.sleep(10)
+    confirmation_code_sent_page.click_button_to_come_in_authoriz()
+    time.sleep(20)
+    confirmation_code_sent_page.click_link_private_office()
+    time.sleep(10)
+    confirmation_code_sent_page.click_link_private_office_username()
+    time.sleep(10)
+    confirmation_code_sent_page.click_link_office_username_log_off()
+    time.sleep(10)
+    confirmation_code_sent_page.entry_email_phone_authoriz_code("89135397056")
+    time.sleep(10)
+    confirmation_code_sent_page.click_button_to_get_code()
+    time.sleep(10)
+    confirmation_code_sent_page.driver.save_screenshot('test_53.png')
+
+# 54 тест # Проверка валидности ссылки "Изменить номер" по номеру телефона  на странице "Код подтверждения отправлен"
+def test_change_number_code_page(browser):
+    change_number_code_page = TemporaryCodePageHelper(browser)
+    change_number_code_page.go_to_site()
+    time.sleep(20)
+    change_number_code_page.click_word_phono_authoriz()
+    time.sleep(10)
+    change_number_code_page.entry_phone_number_authoriz("89135397056")
+    time.sleep(5)
+    change_number_code_page.entry_email_password_authoriz("Marina-1973")
+    time.sleep(5)
+    change_number_code_page.click_button_remember_authoriz()
+    time.sleep(10)
+    change_number_code_page.click_button_to_come_in_authoriz()
+    time.sleep(20)
+    change_number_code_page.click_link_private_office()
+    time.sleep(10)
+    change_number_code_page.click_link_private_office_username()
+    time.sleep(10)
+    change_number_code_page.click_link_office_username_log_off()
+    time.sleep(10)
+    change_number_code_page.entry_email_phone_authoriz_code("89135397056")
+    time.sleep(10)
+    change_number_code_page.click_button_to_get_code()
+    time.sleep(10)
+    change_number_code_page.click_link_change_phone_code()
+    time.sleep(10)
+    form_work_hint_text_1 = change_number_code_page.form_work_hint_code()
+    assert form_work_hint_text_1 == "Укажите почту или номер телефона, на которые необходимо отправить код подтверждения"
+
+# 55 тест # Проверка валидности ссылки "Изменить почту" по email на странице "Код подтверждения отправлен"
+def test_change_mail_code_page(browser):
+    change_mail_code_page = TemporaryCodePageHelper(browser)
+    change_mail_code_page.go_to_site()
+    time.sleep(20)
+    change_mail_code_page.click_word_phono_authoriz()
+    time.sleep(10)
+    change_mail_code_page.entry_phone_number_authoriz("89135397056")
+    time.sleep(5)
+    change_mail_code_page.entry_email_password_authoriz("Marina-1973")
+    time.sleep(5)
+    change_mail_code_page.click_button_remember_authoriz()
+    time.sleep(10)
+    change_mail_code_page.click_button_to_come_in_authoriz()
+    time.sleep(20)
+    change_mail_code_page.click_link_private_office()
+    time.sleep(10)
+    change_mail_code_page.click_link_private_office_username()
+    time.sleep(10)
+    change_mail_code_page.click_link_office_username_log_off()
+    time.sleep(10)
+    change_mail_code_page.entry_email_phone_authoriz_code("ma-karkashenko@mail.ru")
+    time.sleep(10)
+    change_mail_code_page.click_button_to_get_code()
+    time.sleep(10)
+    change_mail_code_page.click_link_change_phone_code()
+    time.sleep(10)
+    form_work_hint_text_2 = change_mail_code_page.form_work_hint_code()
+    assert form_work_hint_text_2 == "Укажите почту или номер телефона, на которые необходимо отправить код подтверждения"
+
+# 56 тест # Негативная проверка ввода неверного кода на страница "Код подтверждения отправлен"
+def test_negative_code_check(browser):
+    negative_code_check = TemporaryCodePageHelper(browser)
+    negative_code_check.go_to_site()
+    time.sleep(20)
+    negative_code_check.click_word_phono_authoriz()
+    time.sleep(10)
+    negative_code_check.entry_phone_number_authoriz("89135397056")
+    time.sleep(5)
+    negative_code_check.entry_email_password_authoriz("Marina-1973")
+    time.sleep(5)
+    negative_code_check.click_button_remember_authoriz()
+    time.sleep(10)
+    negative_code_check.click_button_to_come_in_authoriz()
+    time.sleep(20)
+    negative_code_check.click_link_private_office()
+    time.sleep(10)
+    negative_code_check.click_link_private_office_username()
+    time.sleep(10)
+    negative_code_check.click_link_office_username_log_off()
+    time.sleep(10)
+    negative_code_check.entry_email_phone_authoriz_code("89135397056")
+    time.sleep(10)
+    negative_code_check.click_button_to_get_code()
+    time.sleep(10)
+    negative_code_check.entry_number_1_code("1")
+    time.sleep(5)
+    negative_code_check.entry_number_2_code("2")
+    time.sleep(5)
+    negative_code_check.entry_number_3_code("3")
+    time.sleep(5)
+    negative_code_check.entry_number_4_code("4")
+    time.sleep(5)
+    negative_code_check.entry_number_5_code("5")
+    time.sleep(5)
+    negative_code_check.entry_number_6_code("6" + "\h")
+    time.sleep(10)
+    negative_code_check.driver.save_screenshot('test_55.png')
